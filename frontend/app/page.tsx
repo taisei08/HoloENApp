@@ -1,10 +1,7 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import "../src/output.css";
 
 export default function Home() {
   return (
-    <div>
-        {/* 空のDIV要素をだけ残す */}
-    </div>
+    <button className="btn">Button</button>
   );
 }

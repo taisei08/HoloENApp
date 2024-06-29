@@ -2,13 +2,14 @@
 module.exports = {
   mode: 'jit',
   content: [
-    "./app/page.tsx",
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {},
   },
   daisyui: {
-    themes: ["bumblebee", "dracula", "cupcake"],
+    themes: ["bumblebee", "dracula", "emerald"],
   },
   plugins: [
     require('daisyui'),

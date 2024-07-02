@@ -6,7 +6,14 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      maxWidth: {
+        'custom': `${process.env.NEXT_PUBLIC_MAX_WIDTH}px`
+      },
+      width: {
+        'custom': `${process.env.NEXT_PUBLIC_MAX_WIDTH}px`
+      },
+    }
   },
   daisyui: {
     themes: ["bumblebee", "dracula", "emerald"],

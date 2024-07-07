@@ -11,7 +11,7 @@ export default function Home() {
       <div className="pointer-events-none bg-gradient-to-t from- to-/100 w-full flex items-center justify-center">
         <VideoScroll />
         <Image
-          src={"/logo/logo_light.png"}
+          src={"/logo/logo_dark.png"}
           alt={"logo"}
           width={180}
           height={180}

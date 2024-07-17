@@ -5,7 +5,7 @@ const ContentCard = () => {
   return (
     <div className="flex flex-col items-center w-56 h-72 rounded-lg shadow">
       <Image src="/temp/postcss.config.jpg" alt="Image" width={200} height={200} className="mt-3 rounded" />
-      <a className="link link-hover link-accent text-xs mr-20 mt-1">元動画へのリンク▶︎</a>
+      <a href="https://www.youtube.com/watch?v=x9tgf9tAjLg" target="_blank" className="link link-hover link-accent text-xs mr-20 mt-1">元動画へのリンク▶︎</a>
       <div className="mb-2 text-center">
         <h2 className="w-48 text-xl font-bold hover:underline">あああああ</h2>
       </div>

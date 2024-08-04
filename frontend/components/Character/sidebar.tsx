@@ -9,7 +9,7 @@ const Sidebar = () => {
           {characters.map((character) => (
             <tr key={character.enName}>
               <td className='p-0'>
-                <Link href={`/character/${character.src}`} className="flex items-center p-2 hover:bg-secondary/20 transition duration-300">
+                <Link href={`${character.src}`} className="flex items-center p-2 hover:bg-secondary/20 transition duration-300">
                   <span className="inline-block w-3 h-3 bg-secondary mr-2 rounded"></span>
                   {character.enName}
                 </Link>

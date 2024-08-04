@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase/firebase";
 import { DocumentData, collection, getDocs, query, orderBy } from 'firebase/firestore';
 
-export async function GET(res: NextResponse, { params }: { params: { videoId: string } }) {
-  const { videoId } = params;
+export async function GET(res: NextResponse, { params }: { params: { character: string, videoId: string } }) {
+  const { character, videoId } = params;
 
-  const transcriptionsRef = collection(db, `videos/${videoId}/transcriptions`);
+  const transcriptionsRef = collection(db, `videos/${character}/information/${videoId}/transcriptions`);
   const q = query(transcriptionsRef, orderBy('starting_seconds', 'asc'));
   const transcriptionsSnap = await getDocs(q);
 

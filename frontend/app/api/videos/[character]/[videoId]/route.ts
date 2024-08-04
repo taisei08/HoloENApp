@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase/firebase";
 import { doc, getDoc } from 'firebase/firestore';
 
-export async function GET(res: NextResponse, { params }: { params: { videoId: string } }) {
-  const { videoId } = params;
+export async function GET(res: NextResponse, { params }: { params: { character: string, videoId: string } }) {
+  const { character, videoId } = params;
 
-  const videoRef = doc(db, 'videos', videoId);
+  const videoRef = doc(db, `videos/${character}/information/${videoId}`);
   const videoSnap = await getDoc(videoRef)
 
   if (videoSnap.exists()) {

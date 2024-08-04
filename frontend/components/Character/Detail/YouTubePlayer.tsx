@@ -69,7 +69,6 @@ const YouTubePlayer: React.FC = () => {
 
   const playSelectedSegments = () => {
     const selectedSegments = selectedIndicesRef.current.map(index => segmentsRef.current[index]);
-    console.log(selectedSegments)
     let totalDuration = selectedSegments.reduce((acc, segment) => acc + segment.duration, 0);
     if (selectedSegments.length > 0) {
       const firstSegment = selectedSegments[0];

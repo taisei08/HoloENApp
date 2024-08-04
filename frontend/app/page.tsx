@@ -1,9 +1,11 @@
+"use client";
 import "../src/output.css";
 import Image from "next/image";
 import CharacterThumbButton from "../components/Home/CharacterThumbButton";
 import PageTopButton from "../components/Home/PageTopButton";
 import VideoScroll from "../components/Home/VideoScroll";
 import { characters } from "../data/character";
+import axios from 'axios';
 
 export default function Home() {
   return (

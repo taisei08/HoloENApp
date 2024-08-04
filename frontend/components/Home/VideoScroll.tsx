@@ -24,7 +24,6 @@ const VideoScroll = () => {
 
     const scroll = () => {
       scrollAmount += scrollStep;
-      console.log(scrollAmount, scrollContainer.scrollWidth / 2)
       if (scrollAmount >= scrollContainer.scrollWidth / 2) {
         setVideos(prevVideos => [...prevVideos, ...initialVideos]);
       }

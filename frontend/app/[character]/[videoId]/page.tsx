@@ -4,27 +4,43 @@ import { useState, useEffect } from "react";
 import YouTubePlayer from "../../../components/Character/Detail/YouTubePlayer";
 import { useParams } from "next/navigation";
 import axios from 'axios';
+import { VideoInformation, Transcription } from "../../../interfaces/video";
 
 const Detail = () => {
   const params = useParams();
-  const { character, videoId } = params;
-  const [segments, setSegments] = useState([]);
+  const { character, videoId } = params as { character: string, videoId: string };
+  const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
+  const [video, setVideo] = useState<VideoInformation>();
+
 
   const fetchTranscriptions = async () => {
-    const response = await axios.get(`/api/videos/${character}/${videoId}/transcriptions`);
-    console.log(response.data);
-    setSegments(() => response.data);
+    try {
+      const response = await axios.get(`/api/videos/${character}/${videoId}/transcriptions`);
+      console.log(response.data);
+      setTranscriptions(() => response.data);
+    } catch (error) {
+      console.error("Failed to fetch transcriptions:", error);
+    }
   };
+
+  const fetchVideoInformation = async () => {
+    try {
+      const response = await axios.get<VideoInformation[]>(`/api/videos/${character}/${videoId}`);
+      setVideo(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Failed to fetch video information:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchVideoInformation();
+    fetchTranscriptions();
+  }, [videoId]);
 
   return (
     <div className="container mx-auto p-4">
-                  <button
-        className="mt-4 w-60 rounded-full bg-green-500 py-2 px-4 font-bold text-white hover:bg-green-700"
-        onClick={() => fetchTranscriptions()}>
-        Insert User
-      </button>
-
-      <YouTubePlayer segments={segments}/>
+      <YouTubePlayer transcriptions={transcriptions} videoId={videoId}/>
     </div>
   );
 };

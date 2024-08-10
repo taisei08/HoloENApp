@@ -1,22 +1,17 @@
 import { useEffect, useState, useRef } from 'react';
-
-interface Segment {
-  transcription: string;
-  starting_seconds: number;
-  duration: number;
-}
+import { Transcription } from '../../../interfaces/video';
 
 interface YouTubePlayerProps {
-  segments: Segment[];
+  transcriptions: Transcription[];
+  videoId: string;
 }
 
-const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ segments }) => {
+const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }) => {
   const player = useRef<any>(null);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const selectedIndicesRef = useRef(selectedIndices);
-  const segmentsRef = useRef<Segment[]>(segments);
-  const videoId = 'QEBDiAS3kZ8';
+  const segmentsRef = useRef<Transcription[]>(transcriptions);
 
   useEffect(() => {
     const tag = document.createElement('script');
@@ -36,8 +31,8 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ segments }) => {
 
   useEffect(() => {
     // Update segmentsRef when segments prop changes
-    segmentsRef.current = segments;
-  }, [segments]);
+    segmentsRef.current = transcriptions;
+  }, [transcriptions]);
 
   const handleSegmentClick = (index: number) => {
     if (selectedIndices.length === 0) {
@@ -93,16 +88,16 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ segments }) => {
     <div>
       <div id="player" className="mb-4"></div>
       <div id="text-container" className="mt-4">
-        {segments.map((segment, index) => (
+        {transcriptions.map((transcription, index) => (
           <span
             key={index}
             className={`${selectedIndices.includes(index) ? 'text-segment-selected bg-yellow-300 inline cursor-pointer' : 'text-segment inline cursor-pointer'}`}
             data-index={index}
-            data-start={segment.starting_seconds}
-            data-duration={segment.duration}
+            data-start={transcription.starting_seconds}
+            data-duration={transcription.duration}
             onClick={() => handleSegmentClick(index)}
           >
-            {segment.transcription + ' '}
+            {transcription.transcription + ' '}
           </span>
         ))}
       </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react";
 import YouTubePlayer from "../../../components/Character/Detail/YouTubePlayer";
 import { useParams } from "next/navigation";
 import axios from 'axios';
@@ -7,10 +8,12 @@ import axios from 'axios';
 const Detail = () => {
   const params = useParams();
   const { character, videoId } = params;
+  const [segments, setSegments] = useState([]);
 
   const fetchTranscriptions = async () => {
     const response = await axios.get(`/api/videos/${character}/${videoId}/transcriptions`);
     console.log(response.data);
+    setSegments(() => response.data);
   };
 
   return (
@@ -21,7 +24,7 @@ const Detail = () => {
         Insert User
       </button>
 
-      <YouTubePlayer />
+      <YouTubePlayer segments={segments}/>
     </div>
   );
 };

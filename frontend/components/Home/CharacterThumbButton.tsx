@@ -6,7 +6,7 @@ import Link from 'next/link';
 const CharacterThumbButton = ({ jpName, enName, src }: { jpName: string, enName: string, src: string }) => {
   return (
     <div className="text-center">
-      <Link href={`/character/${src}`} key={src}>
+      <Link href={`/${src}`} key={src}>
         <div className="border-2 border-accent inline-block rounded-lg group">
           <div className="relative w-48 h-48 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-secondary/50 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-200 z-0"></div>

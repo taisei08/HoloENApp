@@ -1,19 +1,22 @@
 import { useEffect, useState, useRef } from 'react';
 
 interface Segment {
-  text: string;
-  start: number;
+  transcription: string;
+  starting_seconds: number;
   duration: number;
 }
 
-const YouTubePlayer: React.FC = () => {
+interface YouTubePlayerProps {
+  segments: Segment[];
+}
+
+const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ segments }) => {
   const player = useRef<any>(null);
-  const [segments, setSegments] = useState<Segment[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const selectedIndicesRef = useRef(selectedIndices);
-  const segmentsRef = useRef<Segment[]>([]);
-  const videoId = '9g33-DTYPiA';
+  const segmentsRef = useRef<Segment[]>(segments);
+  const videoId = 'QEBDiAS3kZ8';
 
   useEffect(() => {
     const tag = document.createElement('script');
@@ -26,29 +29,15 @@ const YouTubePlayer: React.FC = () => {
         height: '390',
         width: '640',
         videoId: videoId,
-        events: {
-          onReady: onPlayerReady,
-        },
       });
       player.current = playerInstance;
     };
   }, []);
 
-  const onPlayerReady = () => {
-    loadCSV(`/temp/${videoId}.csv`, (csvData: string) => {
-      const lines = csvData.trim().split('\n');
-      const loadedSegments = lines.slice(1).map((line) => {
-        const data = line.split(',');
-        return {
-          text: data[0],
-          start: parseFloat(data[1]),
-          duration: parseFloat(data[2]),
-        };
-      });
-      setSegments(loadedSegments);
-      segmentsRef.current = loadedSegments;
-    });
-  };
+  useEffect(() => {
+    // Update segmentsRef when segments prop changes
+    segmentsRef.current = segments;
+  }, [segments]);
 
   const handleSegmentClick = (index: number) => {
     if (selectedIndices.length === 0) {
@@ -72,7 +61,8 @@ const YouTubePlayer: React.FC = () => {
     let totalDuration = selectedSegments.reduce((acc, segment) => acc + segment.duration, 0);
     if (selectedSegments.length > 0) {
       const firstSegment = selectedSegments[0];
-      const start = firstSegment.start;
+      const start = firstSegment.starting_seconds;
+      console.log(start)
       player.current.seekTo(start);
       player.current.playVideo();
 
@@ -86,13 +76,6 @@ const YouTubePlayer: React.FC = () => {
     }
   };
 
-  const loadCSV = (url: string, callback: (data: string) => void) => {
-    fetch(url)
-      .then((response) => response.text())
-      .then((data) => callback(data))
-      .catch((error) => console.error('Error loading CSV:', error));
-  };
-
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
       playSelectedSegments();
@@ -101,6 +84,9 @@ const YouTubePlayer: React.FC = () => {
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
@@ -112,11 +98,11 @@ const YouTubePlayer: React.FC = () => {
             key={index}
             className={`${selectedIndices.includes(index) ? 'text-segment-selected bg-yellow-300 inline cursor-pointer' : 'text-segment inline cursor-pointer'}`}
             data-index={index}
-            data-start={segment.start}
+            data-start={segment.starting_seconds}
             data-duration={segment.duration}
             onClick={() => handleSegmentClick(index)}
           >
-            {segment.text + ' '}
+            {segment.transcription + ' '}
           </span>
         ))}
       </div>

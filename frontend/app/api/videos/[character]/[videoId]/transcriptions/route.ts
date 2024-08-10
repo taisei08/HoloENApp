@@ -16,7 +16,7 @@ export async function GET(res: NextResponse, { params }: { params: { character: 
 
 
   if (transcriptions.length !== 0) {
-    return NextResponse.json(JSON.stringify(transcriptions), { status: 200 });
+    return NextResponse.json(transcriptions, { status: 200 });
   } else {
     return NextResponse.json({ error: 'Video not found' }, { status: 404 })
   }

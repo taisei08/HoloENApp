@@ -24,13 +24,16 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
         height: '390',
         width: '640',
         videoId: videoId,
+        playerVars: {
+          modestbranding: 1,
+          rel: 0,
+        },
       });
       player.current = playerInstance;
     };
-  }, []);
+  }, [videoId]);
 
   useEffect(() => {
-    // Update segmentsRef when segments prop changes
     segmentsRef.current = transcriptions;
   }, [transcriptions]);
 
@@ -57,7 +60,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
     if (selectedSegments.length > 0) {
       const firstSegment = selectedSegments[0];
       const start = firstSegment.starting_seconds;
-      console.log(start)
       player.current.seekTo(start);
       player.current.playVideo();
 
@@ -85,13 +87,16 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
   }, []);
 
   return (
-    <div>
-      <div id="player" className="mb-4"></div>
-      <div id="text-container" className="mt-4">
+    <div className="max-w-5xl mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
+      <div id="text-container" className="w-full lg:w-1/2 max-h-128 overflow-y-auto p-4 border border-gray-300 rounded-md bg-gray-100" style={{ maxHeight: '600px' }}>
         {transcriptions.map((transcription, index) => (
           <span
             key={index}
-            className={`${selectedIndices.includes(index) ? 'text-segment-selected bg-yellow-300 inline cursor-pointer' : 'text-segment inline cursor-pointer'}`}
+            className={`${
+              selectedIndices.includes(index)
+                ? 'text-segment-selected bg-yellow-300 inline cursor-pointer px-1 py-0.5 rounded'
+                : 'text-segment inline cursor-pointer px-1 py-0.5 rounded hover:bg-yellow-200'
+            }`}
             data-index={index}
             data-start={transcription.starting_seconds}
             data-duration={transcription.duration}
@@ -100,6 +105,9 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
             {transcription.transcription + ' '}
           </span>
         ))}
+      </div>
+      <div id="player-container" className="w-full lg:w-1/2 flex justify-center">
+        <div id="player" className="w-full h-64 lg:h-72"></div>
       </div>
     </div>
   );

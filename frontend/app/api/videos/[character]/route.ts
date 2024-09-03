@@ -3,8 +3,9 @@ import { db } from "@/lib/firebase/firebase";
 
 export async function GET(res: NextResponse, { params }: { params: { character: string } }) {
   const { character } = params;
+  const offset = 50
   const videosRef = db.collection(`videos/${character}/information`);
-  const q = videosRef.orderBy("uploaded_at", "desc");
+  const q = videosRef.orderBy("uploaded_at", "desc").offset(offset).limit(50);
   const querySnapshot = await q.get();
 
   if (!querySnapshot.empty) {

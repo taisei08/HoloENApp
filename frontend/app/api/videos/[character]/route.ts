@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase/firebase";
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 
 export async function GET(res: NextResponse, { params }: { params: { character: string } }) {
   const { character } = params;
-
-  const videosRef = collection(db, `videos/${character}/information`);
-  const q = query(videosRef, orderBy("uploaded_at", "desc"));
-  const querySnapshot = await getDocs(q);
+  const videosRef = db.collection(`videos/${character}/information`);
+  const q = videosRef.orderBy("uploaded_at", "desc");
+  const querySnapshot = await q.get();
 
   if (!querySnapshot.empty) {
     const videosData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -16,4 +14,3 @@ export async function GET(res: NextResponse, { params }: { params: { character: 
     return NextResponse.json({ error: 'No videos found' }, { status: 404 });
   }
 }
-

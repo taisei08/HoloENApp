@@ -56,13 +56,12 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
 
   const playSelectedSegments = () => {
     const selectedSegments = selectedIndicesRef.current.map(index => segmentsRef.current[index]);
-    let totalDuration = selectedSegments.reduce((acc, segment) => acc + segment.duration, 0);
+    let totalDuration = selectedSegments.reduce((acc, segment) => acc + Number(segment.duration), 0);
     if (selectedSegments.length > 0) {
       const firstSegment = selectedSegments[0];
-      const start = firstSegment.starting_seconds;
+      const start = firstSegment.total_seconds;
       player.current.seekTo(start);
       player.current.playVideo();
-
       if (timeoutId.current) {
         clearTimeout(timeoutId.current);
       }
@@ -98,11 +97,11 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
                 : 'text-segment inline cursor-pointer px-1 py-0.5 rounded hover:bg-yellow-200'
             }`}
             data-index={index}
-            data-start={transcription.starting_seconds}
+            data-start={transcription.total_seconds}
             data-duration={transcription.duration}
             onClick={() => handleSegmentClick(index)}
           >
-            {transcription.transcription + ' '}
+            {transcription.text + ' '}
           </span>
         ))}
       </div>

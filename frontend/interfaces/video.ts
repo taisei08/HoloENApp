@@ -1,6 +1,7 @@
 export interface VideoInformation {
   id: string;
   title: string;
+  csv_file: string;
   total_seconds: number;
   uploaded_at: string;
   word_count: number;
@@ -8,7 +9,7 @@ export interface VideoInformation {
 }
 
 export interface Transcription {
-  starting_seconds: number;
+  total_seconds: number;
   duration: number;
-  transcription: string;
+  text: string;
 }

@@ -1,4 +1,4 @@
-FROM node:22-alpine3.19
+FROM node:18.20.4-alpine
 COPY . /frontend
 WORKDIR /frontend
 RUN npm install

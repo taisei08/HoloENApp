@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/en-app
+      - node_modules:/en-app/node_modules
+    command: sh -c "npm run dev"
+    # platform: linux/x86_64
+    ports:
+      - 3000:3000
+volumes:
+  node_modules:

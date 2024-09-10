@@ -14,10 +14,11 @@ const Post: React.FC = () => {
   const params = useParams();
   const { character } = params;
   const [videos, setVideos] = useState<VideoInformation[]>([]);
+  const [sortCriteria, setSortCriteria] = useState<string>('');
 
-  const fetchVideoInformation = async () => {
+  const fetchVideoInformation = async (sortCriteria: string) => {
     try {
-      const response = await axios.get<VideoInformation[]>(`/api/videos/${character}`);
+      const response = await axios.get<VideoInformation[]>(`/api/videos/${character}?sort=${sortCriteria}`);
       setVideos(response.data);
       console.log(response.data);
     } catch (error) {
@@ -26,12 +27,12 @@ const Post: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchVideoInformation();
-  }, []);
+    fetchVideoInformation(sortCriteria);
+  }, [sortCriteria]);
 
 
   const handleSort = (criteria: string) => {
-    console.log(`並び替え: ${criteria}`);
+    setSortCriteria(criteria);
   };
 
   return (

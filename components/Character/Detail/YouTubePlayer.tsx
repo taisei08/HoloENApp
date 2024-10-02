@@ -8,9 +8,9 @@ interface YouTubePlayerProps {
 
 const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }) => {
   const player = useRef<any>(null);
-  const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
-  const selectedIndicesRef = useRef(selectedIndices);
+  const selectedIndexRef = useRef(selectedIndex);
   const segmentsRef = useRef<Transcription[]>(transcriptions);
 
   useEffect(() => {
@@ -37,25 +37,26 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
     segmentsRef.current = transcriptions;
   }, [transcriptions]);
 
-  const handleSegmentClick = (index: number) => {
-    if (selectedIndices.length === 0) {
-      setSelectedIndices([index]);
-      selectedIndicesRef.current = [index];
+  const highlightSentence = (index: number) => {
+    if (selectedIndex.length === 0) {
+      setSelectedIndex([index]);
+      selectedIndexRef.current = [index];
     } else {
-      const minSelectedIndex = Math.min(...selectedIndices);
-      const maxSelectedIndex = Math.max(...selectedIndices);
-      if (index === minSelectedIndex - 1 || index === maxSelectedIndex + 1) {
-        setSelectedIndices([...selectedIndices, index].sort((a, b) => a - b));
-        selectedIndicesRef.current = [...selectedIndices, index].sort((a, b) => a - b);
+      const maxSelectedIndex = Math.max(...selectedIndex);
+      if (maxSelectedIndex < index) {
+        // INFO: 現在のselectedIndex+1からindexまでの整数を追加してソート
+        const range:number[] = Array.from({ length: index - maxSelectedIndex }, (_, i) => maxSelectedIndex + 1 + i);
+        setSelectedIndex([...selectedIndex, ...range].sort((a, b) => a - b));
+        selectedIndexRef.current = [...selectedIndex, index].sort((a, b) => a - b);
       } else {
-        setSelectedIndices([index]);
-        selectedIndicesRef.current = [index];
+        setSelectedIndex([index]);
+        selectedIndexRef.current = [index];
       }
     }
   };
 
   const playSelectedSegments = () => {
-    const selectedSegments = selectedIndicesRef.current.map(index => segmentsRef.current[index]);
+    const selectedSegments = selectedIndexRef.current.map(index => segmentsRef.current[index]);
     let totalDuration = selectedSegments.reduce((acc, segment) => acc + Number(segment.duration), 0);
     if (selectedSegments.length > 0) {
       const firstSegment = selectedSegments[0];
@@ -92,14 +93,14 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ transcriptions, videoId }
           <span
             key={index}
             className={`${
-              selectedIndices.includes(index)
+              selectedIndex.includes(index)
                 ? 'text-segment-selected bg-yellow-300 inline cursor-pointer px-1 py-0.5 rounded'
                 : 'text-segment inline cursor-pointer px-1 py-0.5 rounded hover:bg-yellow-200'
             }`}
             data-index={index}
             data-start={transcription.total_seconds}
             data-duration={transcription.duration}
-            onClick={() => handleSegmentClick(index)}
+            onClick={() => highlightSentence(index)}
           >
             {transcription.text + ' '}
           </span>

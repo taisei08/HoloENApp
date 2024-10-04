@@ -12,7 +12,7 @@ const RoundGauge: React.FC<RoundGaugeProps> = ({ value }) => {
 
   useEffect(() => {
     let start = 0;
-    const end = value
+    const end = value;
     const animationDuration = 1000
     const increment = end / (animationDuration / 16); // フレームごとの増加量（60fps基準）
 
